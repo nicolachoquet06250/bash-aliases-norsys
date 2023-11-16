@@ -37,7 +37,7 @@ fi
 if [[ ! -d "${HOME}/.bash-aliases-norsys" ]];then
   path=""
   if [[ "$1" == "install-script" ]];then
-    path="/bash-alias-clipboard"
+    path="/bash-aliases-norsys"
   fi
   ln -s "$(pwd)${path}" "${HOME}/.bash-aliases-norsys";
 fi
