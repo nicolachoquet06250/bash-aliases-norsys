@@ -2,16 +2,18 @@
 
 if {
   [[ "$(type framework 2>&1)" =~ "non trouvé" ]] ||
-  [[ "$(type framework 2>&1)" =~ "not found" ]]
+  [[ "$(type framework 2>&1)" =~ "not found" ]] ||
+  [[ ! -f "$(pwd)/bash-aliases-framework" ]]
 };then
   git clone git@github.com:nicolachoquet06250/bash-aliases-framework.git
 fi
 
 if {
   [[ "$(type clipboard 2>&1)" =~ "non trouvé" ]] ||
-  [[ "$(type clipboard 2>&1)" =~ "not found" ]]
+  [[ "$(type clipboard 2>&1)" =~ "not found" ]] ||
+  [[ ! -f "$(pwd)/bash-alias-clipboard" ]]
 };then
-  git clone git@github.com:nicolachoquet06250/bash-aliases-clipboard.git
+  git clone git@github.com:nicolachoquet06250/bash-alias-clipboard.git
 fi
 
 if [[ ! -d "${HOME}/.bash-aliases-norsys" ]];then
