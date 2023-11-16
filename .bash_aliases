@@ -62,7 +62,6 @@ function norsys() {
 
     if [[ ! -f "${file_path}" ]];then
       echo "- Documentations
-
 Vuetify=https://vuetifyjs.com/en/
 Bun.js=https://bun.sh/
 Deno=https://deno.com/
@@ -94,6 +93,11 @@ ImageToText=https://www.imagetotext.info/
 ImageToASCII=https://www.asciiart.eu/image-to-ascii
 TextToASCII=https://www.asciiart.eu/text-to-ascii-art
 Ascii & Art service=https://www.asciiart.eu/
+Bash en ligne=https://www.jdoodle.com/test-bash-shell-script-online
+
+- Regex
+Regex101=https://regex101.com/
+Testeur de regex=https://regexr.com/2rhq7
 
 - Norsys
 Norsys Daily=https://norsys-daily.norsys.fr/
