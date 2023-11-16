@@ -11,8 +11,8 @@ if {
 fi
 
 if {
-  [[ "$(type clipboard 2>&1)" =~ "non trouvé" ]] ||
-  [[ "$(type clipboard 2>&1)" =~ "not found" ]] ||
+#  [[ "$(type clipboard 2>&1)" =~ "non trouvé" ]] ||
+#  [[ "$(type clipboard 2>&1)" =~ "not found" ]] ||
   [[ ! -d "$(pwd)/bash-alias-clipboard" ]]
 };then
   git clone git@github.com:nicolachoquet06250/bash-alias-clipboard.git
