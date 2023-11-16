@@ -1,0 +1,34 @@
+#!/bin/bash
+
+if {
+  [[ "$(type framework 2>&1)" =~ "non trouvé" ]] ||
+  [[ "$(type framework 2>&1)" =~ "not found" ]]
+};then
+  git clone git@github.com:nicolachoquet06250/bash-aliases-framework.git
+fi
+
+if {
+  [[ "$(type clipboard 2>&1)" =~ "non trouvé" ]] ||
+  [[ "$(type clipboard 2>&1)" =~ "not found" ]]
+};then
+  git clone git@github.com:nicolachoquet06250/bash-aliases-clipboard.git
+fi
+
+if [[ ! -d "${HOME}/.bash-aliases-norsys" ]];then
+  ln -s "$(pwd)" "${HOME}/.bash-aliases-norsys";
+fi
+
+file_path=".bash-aliases-norsys/.bash_aliases"
+
+source_1="source \"\${HOME}/${file_path}\""
+source_2="source \"~/${file_path}\""
+
+bash_aliases_path="${HOME}/.bash_aliases"
+bash_aliases_content="$(cat "${bash_aliases_path}")"
+
+if {
+  [[ ! "${bash_aliases_content}" =~ $source_1 ]] &&
+  [[ ! "${bash_aliases_content}" =~ $source_2 ]]
+};then
+  echo "source \"\${HOME}/${file_path}\"" >> "${bash_aliases_path}"
+fi
