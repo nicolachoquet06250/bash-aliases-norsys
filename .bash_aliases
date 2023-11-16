@@ -49,8 +49,8 @@ function norsys() {
     commands_lines=(
       "norsys passwd:cp"
       ""
-      "norsys tools:site:list"
-      "⬆️  (alias) norsys tools:s:l"
+      "norsys tools:site:list [--whereis|-wi]"
+      "⬆️  (alias) norsys tools:s:l [--whereis|-wi]"
     )
 
     framework_create_help "norsys" "${commands_lines[@]}"
@@ -106,7 +106,7 @@ Norsys Democracy 2.0=https://democracy.norsys.fr/
 Norsys CV=https://norsys-cv.norsys.fr/" > "${file_path}"
     fi
 
-    if [[ "$(flag "whereis" "ws")" == true ]];then
+    if [[ "$(flag "whereis" "wi")" == true ]];then
       echo -n " $(framework_link "${file_path}" "$(framework_format --underline -t "${file_path}")")"
       return
     fi
