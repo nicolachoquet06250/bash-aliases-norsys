@@ -1,4 +1,4 @@
-If (-not (Test-Path "$(pwd)/bash-aliases-framework")) {
+If (-not (Test-Path "$(Get-Location)/bash-aliases-framework")) {
     git clone git@github.com:nicolachoquet06250/bash-aliases-framework.git
 }
 
@@ -27,7 +27,7 @@ If (-not (Test-Path "$HOME/.bash-aliases-norsys")) {
 }
 
 $file_path=".bash-aliases-norsys/.aliases.ps1"
-$source="source \"\$HOME/$file_path\""
+$source='source "\${HOME}/.bash-aliases-norsys/.aliases.ps1"'
 
 If (-not (Select-String $profile -Pattern $source)) {
     Set-Content -Path $profile -Value $source
