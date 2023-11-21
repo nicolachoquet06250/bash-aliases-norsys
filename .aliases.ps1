@@ -48,9 +48,10 @@ function norsys {
     function help {
         return $(framework_create_help "norsys" @(
             "norsys passwd:cp"
+            "⬆️  (alias) norsys pw:cp"
             ""
-            "norsys tools:site:list [--whereis|-wi]"
-            "⬆️  (alias) norsys tools:s:l [--whereis|-wi]"
+            "norsys tools:site:list [--whereis|-wi] [--category|-cat <searched category>] [--categories]"
+            "⬆️  (alias) norsys tools:s:l [--whereis|-wi] [--category|-cat <searched category>] [--categories]"
         ))
     }
     Invoke-Expression $(framework_sub_command -n "help")
@@ -117,16 +118,22 @@ Norsys CV=https://norsys-cv.norsys.fr/" > $file_path
             return framework_warning_message "Aucun site n'a été enregistré"
         }
 
-        framework_warning_message "$(framework_format --weight -t "La liste ci-dessous est clickable (ctrl-click)")"
-        Write-Output ""
+        $category=$(flag "category" "cat")
+        $show_only_categories=$(flag "categories")
+
+        If ($show_only_categories -eq $false) {
+            framework_warning_message "$( framework_format --weight -t "La liste ci-dessous est clickable (ctrl-click)" )"
+            Write-Output ""
+        }
 
         $lines = "$(cat "${file_path}")".Split("\n")
 
+        $category_selected=$false
         $window_length = $(tput cols)
         $cmp = 0
         foreach ($line in $lines) {
             If ($line.Substring(0, 2) -eq "- ") {
-                If ($cmp -gt 0) {
+                If ((($show_only_categories -eq $false) -and (($category -eq $false) -or ($category_selected -eq $true))) -and ($cmp -gt 0)) {
                     Write-Output ""
                 }
                 $width = 80
@@ -157,18 +164,30 @@ Norsys CV=https://norsys-cv.norsys.fr/" > $file_path
                 }
                 $right_part += $right
 
-                Write-Output "${left_part} $(framework_format --underline -t $line.SubString(2, ($line.Length - 2))) ${right_part}"
-                Write-Output ""
+                If (($show_only_categories -eq $true) -or ($category -eq $false) -or ($category -eq $line.Substring(2))) {
+                    $category_selected = $true
+                    If ($show_only_categories -eq $true) {
+                        Write-Output " • $(framework_format --underline -t $line.Substring(2))"
+                    } else {
+                        Write-Output "${left_part} $( framework_format --underline -t $line.SubString(2, ($line.Length - 2)) ) ${right_part}"
+                        Write-Output ""
+                    }
+                } else {
+                    $category_selected = $false
+                }
                 continue
             }
 
-            If ($line.Contains("=")) {
-                $parts = $line.Split("=")
+            If (($show_only_categories -eq $false) -and (($category -eq $false) -or ($category_selected -eq $true))) {
+                If ( $line.Contains("=")) {
+                    $parts = $line.Split("=")
 
-                Write-Host -NoNewline " • $(framework_link "${parts[1]}" "$(framework_format --underline -t "${parts[0]}")")"
-                Write-Output ""
-            } else {
-                Write-Host -NoNewline " • $(framework_link "${line}")"
+                    Write-Host -NoNewline " • $( framework_link "${parts[1]}" "$( framework_format --underline -t "${parts[0]}" )" )"
+                    Write-Output ""
+                }
+                else {
+                    Write-Host -NoNewline " • $( framework_link "${line}" )"
+                }
             }
 
             $cmp++

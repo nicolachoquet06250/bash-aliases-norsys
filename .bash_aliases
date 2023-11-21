@@ -48,9 +48,10 @@ function norsys() {
   function help() {
     commands_lines=(
       "norsys passwd:cp"
+      "⬆️  (alias) norsys pw:cp"
       ""
-      "norsys tools:site:list [--whereis|-wi]"
-      "⬆️  (alias) norsys tools:s:l [--whereis|-wi]"
+      "norsys tools:site:list [--whereis|-wi] [--category|-cat <searched category>] [--categories]"
+      "⬆️  (alias) norsys tools:s:l [--whereis|-wi] [--category|-cat <searched category>] [--categories]"
     )
 
     framework_create_help "norsys" "${commands_lines[@]}"
@@ -118,17 +119,29 @@ Norsys CV=https://norsys-cv.norsys.fr/" > "${file_path}"
       return;
     fi
 
-    framework_warning_message "$(framework_format --weight -t "La liste ci-dessous est clickable (ctrl-click)")"
-    echo ""
+    category="$(flag "category" "cat")"
+    show_only_categories="$(flag "categories")"
+
+    if [[ "${show_only_categories}" == false ]];then
+      framework_warning_message "$(framework_format --weight -t "La liste ci-dessous est clickable (ctrl-click)")"
+      echo ""
+    fi
 
     IFS=$'\n'
     read -rd '' -a lines <<<"$(cat "${file_path}")"
 
+    category_selected=false
     window_length=$(tput cols)
     cmp=0
     for line in "${lines[@]}";do
       if [[ "${line:0:2}" == "- " ]];then
-        [[ $cmp -gt 0 ]] && echo ""
+        {
+          [[ "${show_only_categories}" == false ]] &&
+          {
+            [[ "${category}" == false ]] ||
+            [[ "${category_selected}" == true ]]
+          }
+        } && [[ $cmp -gt 0 ]] && echo ""
         width=80
         [[ 80 -gt $window_length ]] && width=$window_length
 
@@ -151,18 +164,36 @@ Norsys CV=https://norsys-cv.norsys.fr/" > "${file_path}"
         done
         right_part+="${right}"
 
-        echo "${left_part} $(framework_format --underline -t "${line:2:$((${#line} - 2))}") ${right_part}"
-        echo ""
+        if {
+          [[ "${show_only_categories}" == true ]] ||
+          [[ "${category}" == false ]] ||
+          [[ "${category}" == "${line:2:$((${#line} - 2))}" ]]
+        };then
+          category_selected=true
+          if [[ "${show_only_categories}" == true ]];then
+            echo " • $(framework_format --underline -t "${line:2:$((${#line} - 2))}")"
+          else
+            echo "${left_part} $(framework_format --underline -t "${line:2:$((${#line} - 2))}") ${right_part}"
+            echo ""
+          fi
+        else
+          category_selected=false
+        fi
         continue
       fi
 
-      if [[ "${line}" =~ "=" ]];then
-        IFS=$'='
-        read -rd '' -a parts <<<"${line}"
-        echo -n " • $(framework_link "${parts[1]}" "$(framework_format --underline -t "${parts[0]}")")"
-        echo ""
-      else
-        echo -n " • $(framework_link "${line}")"
+      if [[ "${show_only_categories}" == false ]] && {
+        [[ "${category}" == false ]] ||
+        [[ "${category_selected}" == true ]]
+      };then
+        if [[ "${line}" =~ "=" ]];then
+          IFS=$'='
+          read -rd '' -a parts <<<"${line}"
+          echo -n " • $(framework_link "${parts[1]}" "$(framework_format --underline -t "${parts[0]}")")"
+          echo ""
+        else
+          echo -n " • $(framework_link "${line}")"
+        fi
       fi
 
       cmp=$((cmp+1))
