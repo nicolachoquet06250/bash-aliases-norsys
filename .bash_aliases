@@ -184,11 +184,5 @@ Norsys CV=https://norsys-cv.norsys.fr/" > "${file_path}"
   }
   eval "$(framework_sub_command -n "passwd:cp" -s "pw:cp")"
 
-  eval "$(framework_generate_shorts_commands)"
-  eval "$(framework_command_checker --with-help)"
-
-  # shellcheck disable=SC2154
-  [ "$chosen_command" != "passwd:cp" ] && [ "$chosen_command" != "pw:cp" ] && logo;
-
-  eval "$(framework_run_command)"
+  eval "$(framework_run --with-help --except-logo "passwd:cp")"
 }
